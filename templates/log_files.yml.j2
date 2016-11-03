@@ -2,6 +2,9 @@ files:
 {% for item in remote_syslog_files %}
  - {{item}}
 {% endfor %}
+{% if remote_syslog_hostname %}
+hostname: {{ remote_syslog_hostname }}
+{% endif %}
 destination:
   host: {{ remote_syslog_host }}
   port: {{ remote_syslog_port }}
