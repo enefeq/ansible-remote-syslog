@@ -22,9 +22,18 @@
   notify:
     - restart remote_syslog
 
-- name: copy init script (Ubuntu)
+- name: copy init script (Ubuntu Upstart)
   copy: src=remote_syslog.upstart.conf dest=/etc/init/remote_syslog.conf
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version < 14
+
+- name: copy init script (Ubuntu Systemd)
+  get_url:
+    url: https://raw.githubusercontent.com/papertrail/remote_syslog2/master/examples/remote_syslog.systemd.service
+    dest: /lib/systemd/system/remote_syslog.service
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version >= "14"
 
 - name: copy init script (Debian)
   copy: src=remote_syslog.init.d dest=/etc/init.d/remote_syslog
